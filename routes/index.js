@@ -1,22 +1,21 @@
 var express = require('express');
 var router = express.Router();
-var os = require('os');
-
 
 /* GET home page. */
 router.get('/', function(req, res) {
 	res.set({
 		'Content-Type': 'application/json'
 	});
-	var soft = os.type();
-	var lang = req.headers['accept-language'];
-	var ip = req.ip;
-	var patt = /[a-z:]/g;
-	var formip = ip.replace(patt,'');
+	var userAgent = req.get('user-agent');
+	userAgent = userAgent.slice(userAgent.indexOf("(") + 1, userAgent.indexOf(")"));
+	var userLang = req.get('accept-language');
+	userLang = userLang.slice(0, userLang.indexOf(","));
+	var userIp = req.ip;
+	userIp = userIp.replace(/[a-z:]/g,'');
 	res.json({
-		ip: formip,
-		Software: soft,
-		Language: lang
+		ip: userIp,
+		Language: userLang,
+		OS: userAgent
 	})
 });
 
